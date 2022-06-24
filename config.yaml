@@ -1,0 +1,11 @@
+database:
+    username: "postgres"
+    password: ""
+    name: "did_data"
+sendgrid:
+    api_key: 
+aws: 
+    aws_region: us-west-2
+    aws_access_key: 
+    aws_secret_access_key:
+    bucket_name: did2

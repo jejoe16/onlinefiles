@@ -1,0 +1,1195 @@
+basePath: /v1
+definitions:
+  model.Account:
+    properties:
+      address:
+        type: string
+      country:
+        type: string
+      created:
+        type: string
+      date_of_birth:
+        type: string
+      email:
+        type: string
+      email_validated:
+        type: boolean
+      experience:
+        type: integer
+      id:
+        type: integer
+      kin:
+        type: string
+      licence:
+        type: string
+      name:
+        maxLength: 100
+        type: string
+      nationality:
+        type: string
+      passport:
+        type: string
+      phone:
+        type: string
+      profile_completed:
+        type: boolean
+      profile_image:
+        type: string
+      profile_validated:
+        type: boolean
+      rank:
+        type: string
+      role:
+        minimum: 0
+        type: integer
+      ship_experience:
+        type: integer
+      status:
+        minimum: 0
+        type: integer
+      temp:
+        type: boolean
+    required:
+    - email
+    type: object
+  model.AccountProfile:
+    properties:
+      address:
+        type: string
+      country:
+        type: string
+      created:
+        type: string
+      date_of_birth:
+        type: string
+      experience:
+        type: integer
+      id:
+        type: integer
+      kin:
+        type: string
+      licence:
+        type: string
+      name:
+        type: string
+      nationality:
+        type: string
+      passport_image_one:
+        type: string
+      passport_image_two:
+        type: string
+      passport_number:
+        type: string
+      phone:
+        type: string
+      profile_completed:
+        type: boolean
+      profile_image:
+        type: string
+      profile_validated:
+        type: boolean
+      rank:
+        type: string
+      ship_experience:
+        type: integer
+      updated:
+        type: string
+    type: object
+  model.AccountRole:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  model.AccountStatus:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  model.Certificate:
+    properties:
+      accessed:
+        type: integer
+      accountID:
+        type: integer
+      activated:
+        type: boolean
+      courseID:
+        type: integer
+      created:
+        type: string
+      id:
+        type: integer
+      issued:
+        type: string
+      type:
+        type: string
+      typeID:
+        type: integer
+      uid:
+        type: string
+      updated:
+        type: string
+    type: object
+  model.CertificateType:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  model.Course:
+    properties:
+      additional_description:
+        maxLength: 500
+        type: string
+      certificate_name:
+        maxLength: 100
+        minLength: 3
+        type: string
+      course_name:
+        maxLength: 100
+        minLength: 3
+        type: string
+      created:
+        type: string
+      description:
+        maxLength: 500
+        type: string
+      expire:
+        minimum: 0
+        type: integer
+      fk_course_category_id:
+        minimum: 0
+        type: integer
+      id:
+        type: integer
+      image:
+        type: string
+      name:
+        type: string
+      uid:
+        type: string
+    required:
+    - certificate_name
+    - course_name
+    - description
+    - expire
+    - fk_course_category_id
+    type: object
+  model.CourseCategory:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  model.CourseCertificate:
+    properties:
+      certificate:
+        $ref: '#/definitions/model.Certificate'
+      course:
+        $ref: '#/definitions/model.Course'
+      providerAccount:
+        $ref: '#/definitions/model.Account'
+      userAccount:
+        $ref: '#/definitions/model.Account'
+    type: object
+  model.MontlyCourseAnalytics:
+    properties:
+      edits:
+        type: integer
+      issued:
+        type: integer
+      revoked:
+        type: integer
+      validated:
+        type: integer
+    type: object
+  model.MultipartFile:
+    properties:
+      file: {}
+      fileHeader:
+        $ref: '#/definitions/multipart.FileHeader'
+    type: object
+  model.SignInResponse:
+    properties:
+      token:
+        type: string
+    type: object
+  multipart.FileHeader:
+    properties:
+      filename:
+        type: string
+      header:
+        $ref: '#/definitions/textproto.MIMEHeader'
+      size:
+        type: integer
+    type: object
+  textproto.MIMEHeader:
+    additionalProperties:
+      items:
+        type: string
+      type: array
+    type: object
+info:
+  contact:
+    email: io.labs.development@gmail.com
+    name: API Support
+    url: http://www.swagger.io/support
+  title: Digital ID
+  version: "1.0"
+paths:
+  /signin:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - in: formData
+        maxLength: 320
+        minLength: 4
+        name: email
+        required: true
+        type: string
+      - in: formData
+        name: email_validated
+        type: boolean
+      - in: formData
+        name: id
+        type: integer
+      - in: formData
+        maxLength: 156
+        minLength: 8
+        name: password
+        required: true
+        type: string
+      - in: formData
+        name: role
+        type: integer
+      - in: formData
+        name: temp
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.SignInResponse'
+      summary: Sign Into Account
+      tags:
+      - account
+  /signup:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - in: formData
+        maxLength: 320
+        minLength: 4
+        name: email
+        required: true
+        type: string
+      - in: formData
+        maxLength: 156
+        minLength: 8
+        name: password
+        required: true
+        type: string
+      - in: formData
+        maxLength: 156
+        minLength: 8
+        name: passwordconfirm
+        required: true
+        type: string
+      - in: formData
+        name: temp
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      summary: Creates an account on the service
+      tags:
+      - account
+  /v1/account:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authentication header
+        in: header
+        name: Auth
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CourseCertificate'
+      summary: Get's account info using the session token
+      tags:
+      - account
+  /v1/account/{id}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authentication header
+        in: header
+        name: Auth
+        required: true
+        type: string
+      - description: account id
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      summary: Deletes an account by ID
+      tags:
+      - account
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authentication header
+        in: header
+        name: Auth
+        required: true
+        type: string
+      - description: account id
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Account'
+      summary: Gets an account by id
+      tags:
+      - account
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authentication header
+        in: header
+        name: Auth
+        required: true
+        type: string
+      - description: account id
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      summary: Updates an account by ID
+      tags:
+      - account
+  /v1/admin/account/{id}:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authentication header
+        in: header
+        name: Auth
+        required: true
+        type: string
+      - description: Account ID
+        in: query
+        name: id
+        required: true
+        type: string
+      - in: formData
+        name: id
+        required: true
+        type: integer
+      - in: formData
+        minimum: 0
+        name: role
+        required: true
+        type: integer
+      - in: formData
+        minimum: 0
+        name: status
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      summary: Sets a user role from the Admin dashboard
+      tags:
+      - Admin
+  /v1/admin/accounts:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authentication header
+        in: header
+        name: Auth
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Account'
+            type: array
+      summary: Gets all accounts for Admin
+      tags:
+      - Admin
+  /v1/admin/certificate:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authentication header
+        in: header
+        name: Auth
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Certificate'
+            type: array
+      summary: Gets all certificate for Admin
+      tags:
+      - Admin
+  /v1/admin/course/{id}/analytics:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authentication header
+        in: header
+        name: Auth
+        required: true
+        type: string
+      - description: Account ID
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.MontlyCourseAnalytics'
+            type: array
+      summary: Gets all courses for Admin analytics
+      tags:
+      - Admin
+  /v1/admin/courses:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authentication header
+        in: header
+        name: Auth
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Course'
+            type: array
+      summary: Gets all courses for Admin
+      tags:
+      - Admin
+  /v1/certificate:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authentication header
+        in: header
+        name: Auth
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      summary: Creates a certificate by session ID
+      tags:
+      - certificate
+  /v1/certificate/{id}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authentication header
+        in: header
+        name: Auth
+        required: true
+        type: string
+      - description: Certificate ID
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      summary: Deletes a certificate by ID
+      tags:
+      - certificate
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authentication header
+        in: header
+        name: Auth
+        required: true
+        type: string
+      - description: Certificate ID
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Certificate'
+      summary: Gets certificate by ID
+      tags:
+      - certificate
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authentication header
+        in: header
+        name: Auth
+        required: true
+        type: string
+      - description: Certificate ID
+        in: query
+        name: id
+        required: true
+        type: string
+      - in: formData
+        name: activated
+        required: true
+        type: boolean
+      - in: formData
+        name: issued
+        required: true
+        type: string
+      - in: formData
+        minimum: 0
+        name: type
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      summary: Updates a certificate by ID
+      tags:
+      - certificate
+  /v1/certificates/{id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authentication header
+        in: header
+        name: Auth
+        required: true
+        type: string
+      - description: Account ID
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Certificate'
+            type: array
+      summary: Gets all certificate by account ID
+      tags:
+      - certificate
+  /v1/certificates/course/{id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authentication header
+        in: header
+        name: Auth
+        required: true
+        type: string
+      - description: Account ID
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Certificate'
+            type: array
+      summary: Gets all certificate by course ID
+      tags:
+      - certificate
+  /v1/course/{id}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authentication header
+        in: header
+        name: Auth
+        required: true
+        type: string
+      - description: Course ID
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      summary: Delete a course by ID
+      tags:
+      - course
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authentication header
+        in: header
+        name: Auth
+        required: true
+        type: string
+      - description: Course ID
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Course'
+      summary: Gets a course by ID
+      tags:
+      - course
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authentication header
+        in: header
+        name: Auth
+        required: true
+        type: string
+      - in: formData
+        maxLength: 500
+        name: additional_description
+        type: string
+      - in: formData
+        maxLength: 100
+        minLength: 3
+        name: certificate_name
+        required: true
+        type: string
+      - in: formData
+        maxLength: 100
+        minLength: 3
+        name: course_name
+        required: true
+        type: string
+      - in: formData
+        name: created
+        type: string
+      - in: formData
+        maxLength: 500
+        name: description
+        required: true
+        type: string
+      - in: formData
+        minimum: 0
+        name: expire
+        required: true
+        type: integer
+      - in: formData
+        minimum: 0
+        name: fk_course_category_id
+        required: true
+        type: integer
+      - in: formData
+        name: image
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      summary: Creates a new course using session ID
+      tags:
+      - course
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authentication header
+        in: header
+        name: Auth
+        required: true
+        type: string
+      - description: Course ID
+        in: query
+        name: id
+        required: true
+        type: string
+      - in: formData
+        maxLength: 500
+        name: additional_description
+        type: string
+      - in: formData
+        maxLength: 100
+        minLength: 3
+        name: certificate_name
+        required: true
+        type: string
+      - in: formData
+        maxLength: 100
+        minLength: 3
+        name: course_name
+        required: true
+        type: string
+      - in: formData
+        name: created
+        type: string
+      - in: formData
+        maxLength: 500
+        name: description
+        required: true
+        type: string
+      - in: formData
+        minimum: 0
+        name: expire
+        required: true
+        type: integer
+      - in: formData
+        minimum: 0
+        name: fk_course_category_id
+        required: true
+        type: integer
+      - in: formData
+        name: image
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      summary: Update a course by ID
+      tags:
+      - course
+  /v1/courses/{id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authentication header
+        in: header
+        name: Auth
+        required: true
+        type: string
+      - description: Course ID
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Course'
+            type: array
+      summary: Returns all courses under account
+      tags:
+      - course
+  /v1/download/certificate/{uid}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authentication header
+        in: header
+        name: Auth
+        required: true
+        type: string
+      - description: uid from url
+        in: query
+        name: uid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CourseCertificate'
+      summary: Loads certificate from uid
+      tags:
+      - certificate
+  /v1/lookup/account-role:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authentication header
+        in: header
+        name: Auth
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              items:
+                $ref: '#/definitions/model.AccountRole'
+              type: array
+            type: array
+      summary: Gets account roles for form dropdown
+      tags:
+      - Lookup table
+  /v1/lookup/account-status:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authentication header
+        in: header
+        name: Auth
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              items:
+                $ref: '#/definitions/model.AccountStatus'
+              type: array
+            type: array
+      summary: Gets account status for form dropdown
+      tags:
+      - Lookup table
+  /v1/lookup/certificate-type:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authentication header
+        in: header
+        name: Auth
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              items:
+                $ref: '#/definitions/model.CertificateType'
+              type: array
+            type: array
+      summary: Gets certificate types for form dropdown
+      tags:
+      - Lookup table
+  /v1/lookup/course-categories:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authentication header
+        in: header
+        name: Auth
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              items:
+                $ref: '#/definitions/model.CourseCategory'
+              type: array
+            type: array
+      summary: Gets course category for form dropdown
+      tags:
+      - Lookup table
+  /v1/profile/{id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authentication header
+        in: header
+        name: Auth
+        required: true
+        type: string
+      - description: account id
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.AccountProfile'
+      summary: Gets an account by id
+      tags:
+      - profile
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authentication header
+        in: header
+        name: Auth
+        required: true
+        type: string
+      - description: account id
+        in: query
+        name: id
+        required: true
+        type: string
+      - in: formData
+        maxLength: 255
+        name: address
+        required: true
+        type: string
+      - in: formData
+        maxLength: 255
+        name: country
+        required: true
+        type: string
+      - in: formData
+        name: date_of_birth
+        required: true
+        type: string
+      - in: formData
+        maximum: 255
+        name: experience
+        required: true
+        type: integer
+      - in: formData
+        maxLength: 255
+        name: kin
+        required: true
+        type: string
+      - in: formData
+        maxLength: 255
+        name: licence
+        required: true
+        type: string
+      - in: formData
+        maxLength: 255
+        name: name
+        required: true
+        type: string
+      - in: formData
+        maxLength: 255
+        name: nationality
+        required: true
+        type: string
+      - in: formData
+        maxLength: 255
+        name: passport_number
+        required: true
+        type: string
+      - in: formData
+        minLength: 0
+        name: phone
+        required: true
+        type: string
+      - in: formData
+        maxLength: 255
+        name: rank
+        required: true
+        type: string
+      - in: formData
+        maximum: 255
+        name: ship_experience
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      summary: Updates an account by ID
+      tags:
+      - profile
+  /v1/profile/reject:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authentication header
+        in: header
+        name: Auth
+        required: true
+        type: string
+      - description: account id
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      summary: Updates an account by ID
+      tags:
+      - profile
+  /v1/profile/validate:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authentication header
+        in: header
+        name: Auth
+        required: true
+        type: string
+      - description: account id
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      summary: Updates an account by ID
+      tags:
+      - profile
+  /v1/signup/{uid}:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: uid from email
+        in: query
+        name: uid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      summary: Verifies an email with a UID sent to the account email
+      tags:
+      - verify
+  /v1/view/certificate/{uid}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authentication header
+        in: header
+        name: Auth
+        required: true
+        type: string
+      - description: uid from url
+        in: query
+        name: uid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CourseCertificate'
+      summary: Loads certificate from uid
+      tags:
+      - certificate
+swagger: "2.0"
